@@ -7,6 +7,7 @@ import com.Coaios.AISocialMedia.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -21,5 +22,14 @@ public class UserService {
         user.setPosts(null);
         return user;
     }
-
+    
+    public List<User> getAllUsers() {
+        List<User> users = userRepo.findAll();
+        Iterator<User> iter = users.iterator();
+        while(iter.hasNext()) {
+            User user = iter.next();
+            user.setPosts(null); // Avoid circular references
+        }
+        return users;
+    }
 }

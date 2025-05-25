@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 @SuppressWarnings("unused")
 @Service
 @Data
@@ -19,14 +21,25 @@ public class PostService {
     private PostRepo postRepo;
 
     public List<Post> getPosts() {
-        List<Post> posts = postRepo.findAll();
-        Iterator<Post> iter = posts.iterator();
-        Post tempPost = null;
-        while(iter.hasNext()) {
-            tempPost = iter.next();
-            tempPost.getUser().setPosts(null);
+        try {
+            List<Post> posts = postRepo.findAll();
+            if (posts == null || posts.isEmpty()) {
+                return new ArrayList<>();
+            }
+            
+            Iterator<Post> iter = posts.iterator();
+            while(iter.hasNext()) {
+                Post tempPost = iter.next();
+                if (tempPost.getUser() != null) {
+                    tempPost.getUser().setPosts(null);
+                }
+            }
+            return posts;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Return empty list instead of throwing exception
+            return new ArrayList<>();
         }
-        return postRepo.findAll();
     }
 
     public List<Post> getPostsForAgent(Long id) {

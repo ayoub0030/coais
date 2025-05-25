@@ -7,6 +7,8 @@ import com.Coaios.AISocialMedia.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 @CrossOrigin
 @RestController
@@ -20,5 +22,9 @@ public class UserController {
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
-
+    
+    @GetMapping("/getUsers")
+    public List<User> getUsers() {
+        return userService.getAllUsers();
+    }
 }
